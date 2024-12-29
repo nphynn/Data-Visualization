@@ -1,0 +1,90 @@
+---
+title: "Untitled"
+output: html_document
+date: "2023-11-15"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data <- read.csv('WA_Fn-UseC_-HR-Employee-Attrition.csv')
+str(data)
+unique(data$EmployeeCount)
+unique(data$MonthlyIncome)
+unique(data$Attrition)
+```
+
+```{r}
+data1 <- 
+  data %>%
+  mutate(incomerange = case_when(
+    MonthlyIncome %in% c(1000:2000) ~ '1000-2000',
+    MonthlyIncome  %in% c(2001:3000) ~ '2001-3000',
+    MonthlyIncome  %in% c(3001:4000) ~ '3001-4000',
+	  MonthlyIncome  %in% c(4001:5000) ~ '4001-5000',
+  	MonthlyIncome  %in% c(5001:6000) ~ '5001-6000',
+	  MonthlyIncome  %in% c(6001:7000) ~ '6001-7000',
+	  MonthlyIncome  %in% c(7001:8000) ~ '7001-8000',
+	  MonthlyIncome  %in% c(8001:9000) ~ '8001-9000',
+	  MonthlyIncome  %in% c(9001:10000) ~ '9001-10,000',
+	  MonthlyIncome  %in% c(10001:200000) ~ '10001+'))
+```
+
+```{r}
+data2 <- 
+  data1 %>%
+  transmute(
+    EmployeeCount = EmployeeCount, 
+		Attrition = Attrition, 
+		MonthlyIncomeBins = incomerange)
+```
+
+
+```{r}
+data3 <-
+  data2 %>%
+  group_by(MonthlyIncomeBins, Attrition) %>%
+  summarise(EmployeeCount = sum(EmployeeCount))
+```
+
+
+```{r}
+#NEED TO ORDER
+data3 <-
+  data3 %>%
+  mutate(MonthlyIncomeBins = factor(MonthlyIncomeBins, labels = c('1000:2000','2001-3000','3001-4000','4001-5000', '5001-6000', '6001-7000', '7001-8000', '8001-9000', '9000-10,000', '10001+'), ordered = T))
+```
+
+```{r}
+#nEED TO ADD COLORS AND VALUES AND PUT LEGEND TOP RIGHT
+ggplot(data3, aes(x = MonthlyIncomeBins, y = EmployeeCount, fill = Attrition)) +
+  geom_bar(stat = 'identity') +
+  geom_text(aes(label=EmployeeCount)) +
+  scale_fill_manual(values = c("Yes" = "orange", "No" = "blue")) +
+  theme_bw() +
+  labs(
+    title = 'Distribution of attrition by monthly income.',
+    x = 'Monthly Income',
+    y = 'Num. of employee')
+```
+
+
+```{r}
+ggplot(data3, aes(x = MonthlyIncomeBins, y = EmployeeCount, fill = Attrition)) +
+  geom_bar(stat = 'identity') +
+  geom_text(aes(label=EmployeeCount)) +
+  scale_fill_manual(values = c("Yes" = "orange", "No" = "blue")) +
+  theme_bw() +
+  labs(
+    title = 'Distribution of attrition by monthly income.',
+    x = 'Monthly Income',
+    y = 'Num. of employee')
+```
+
+
+

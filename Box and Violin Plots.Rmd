@@ -1,0 +1,90 @@
+---
+title: "Box and Violin Plots"
+author: "Nick Phynn"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data <- read.csv("insurance.csv")
+str(data)
+sum(is.na(data))
+colnames(data)
+str(data)
+```
+
+# Plot 1
+
+```{r}
+data$region <- factor(data$region)
+p1 <- ggplot(data, aes(x = factor(region, levels = c("southwest", "southeast", "northwest", "northeast")), y = charges)) +
+  theme_bw() +
+   theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) + 
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  geom_boxplot(aes(fill = region), show.legend = FALSE) +
+  labs(
+    x = 'region',
+    y = 'charges') +
+  scale_fill_manual(values = c("darkred", "darkgreen", "orange", "steelblue"))
+```
+
+# Plot 2
+
+```{r}
+data$children <- factor(data$children)
+p2 <- ggplot(tests, aes(x = children, y = charges)) +
+    theme_bw() +
+   theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) + 
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  geom_boxplot(aes(fill = children), show.legend = FALSE) +
+  labs(
+    x = 'children',
+    y = 'charges') +
+  scale_fill_manual(values = c("steelblue", "orange", "darkgreen", "darkred", "darkviolet", "saddlebrown"))
+```
+
+# Plot 3
+
+```{r}
+p3 <- ggplot(tests, aes(x = sex , y = charges)) +
+  theme_bw() +
+   theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) + 
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  geom_boxplot(aes(fill = sex), show.legend = FALSE) +
+  labs(
+    x = 'sex',
+    y = 'charges') +
+  scale_fill_manual(values = c("steelblue", "orange"))
+```
+
+# Plot 4
+
+```{r}
+p4 <- ggplot(data, aes(x = factor(smoker, levels = c("yes", "no")), y = charges)) +
+  theme_bw() +
+   theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) + 
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  geom_boxplot(aes(fill = smoker), show.legend = FALSE) +
+  labs(
+    x = 'smoker',
+    y = 'charges') +
+  scale_fill_manual(values = c("orange", "steelblue"))
+
+```
+
+```{r}
+library(cowplot)
+```
+
+```{r}
+plot_grid(p1, p2, p3, p4)
+```

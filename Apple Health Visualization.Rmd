@@ -1,0 +1,157 @@
+---
+title: "Group Project"
+output: html_document
+date: "2024-01-26"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data <- read.csv("stepsdata.csv")
+str(data)
+
+library(lubridate)
+
+data <-
+  data %>%
+  transmute(
+    Week = factor(Week),
+    Day = factor(Day, levels = c("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")),
+    Participants = factor(Participants),
+    Steps = Steps,
+    Emotion = factor(Emotion)
+  )
+
+str(data)
+```
+
+
+Questions
+
+```{r}
+#1. Total Steps by Each Participants
+data3 <-
+  data %>%
+  select(Participants, Steps) %>%
+  group_by(Participants) %>%
+  summarise(total = sum(Steps), groups = 'drop')
+
+plot1 <- ggplot(data3, aes(x = Participants, y = total, fill = Participants)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  geom_histogram(stat = "identity") +
+  geom_text(aes(label = total), vjust = -0.5, color = "black", size = 3) +
+  labs(
+    title = "Total Steps By Each Participants",
+    y = "Total Steps",
+    x = "Participants"
+  ) +
+scale_fill_manual(values = c("darkred", "darkgreen", "steelblue")) +
+  coord_cartesian(ylim = c(0,250000))
+
+
+
+#2. Percentage of each emotions and its total steps
+ data2 <-
+  data %>%
+  select(Emotion, Steps) %>%
+  group_by(Emotion) %>%
+  summarise(total = sum(Steps), groups = 'drop')
+ 
+pie(data2$total, labels = data2$Emotion)
+
+data2$percentage <- data2$total / sum(data2$total) * 100
+
+plot2 <- ggplot(data2, aes(x = '', y = percentage, fill = Emotion)) +
+  geom_bar(stat = 'identity') +
+  geom_text(aes(label = paste0(round(percentage), "%")), position = position_stack(vjust = 0.5), color = "white") +
+  coord_polar(theta = 'y') +
+  theme_bw() +
+  theme(
+    axis.line = element_blank(),
+    axis.text = element_blank(),
+    axis.ticks = element_blank()
+  ) +
+  labs(
+    title = "Percentage of Steps for Each Emotions ",
+    y = "",
+    x = ""
+  ) +
+   theme(panel.grid = element_blank())
+  
+
+
+#3. Total Steps Per Day 
+data4 <-
+  data %>%
+  select(Day, Steps) %>%
+  group_by(Day) %>%
+  summarise(total = sum(Steps), groups = 'drop')
+
+total_steps_per_day <- aggregate(Steps ~ Day, data = data, FUN = sum)
+
+plot5 <- ggplot(data, aes(x = Day, y = Steps)) +
+    theme_bw() +
+   theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank()) + 
+  stat_boxplot(geom = "errorbar", width = 0.5) +
+  geom_boxplot(aes(fill = Day), show.legend = FALSE) +
+  labs(
+    title = 'Total Steps Per Day',
+    x = 'Days of the Week',
+    y = 'Total Steps') +
+  scale_fill_manual(values = c("steelblue", "orange", "darkgreen", "darkred", "darkviolet", "saddlebrown", "grey"))
+
+
+
+
+
+#4. Steps Per Week
+data5 <-
+  data %>%
+  select(Week, Steps) %>%
+  group_by(Week) %>%
+  summarise(total = sum(Steps), groups = 'drop')
+
+
+plot3 <- 
+  ggplot(data5, aes(x = Week , y = total)) +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank(), 
+        axis.line = element_line(colour = "black")) +
+  geom_point() +
+  geom_line(group = 1, color = "red") +
+  labs(
+    title = 'Total Steps Per Week',
+    x = 'Week',
+    y = 'Total Steps')
+
+
+#5 Which participants emotions
+
+plot4 <- ggplot(data, aes(x = Participants, y = Steps, fill = Emotion)) +
+  geom_bar(stat = 'identity') +
+  theme_bw() +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank()) +
+  labs(
+    title = 'Participants Total Steps Per Emotion',
+    x = 'Participants',
+    y = 'Total Steps')
+```
+
+
+```{r}
+library(cowplot)
+plot_grid(plot1, plot2, plot3, plot4, plot5)
+```
+

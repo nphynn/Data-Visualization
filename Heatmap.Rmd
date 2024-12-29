@@ -1,0 +1,98 @@
+---
+title: "Untitled"
+output: html_document
+date: "2024-01-10"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+Confusion matrix values
+true_positive <- 132
+false_positive <- 17
+true_negative <- 161
+false_negative <- 6
+# Create a confusion matrix
+conf_matrix <- matrix(c(true_negative, false_positive, false_negative, true_positive), nrow = 2, byrow = TRUE)
+# Set row and column names
+rownames(conf_matrix) <- c("not_stressed", "stressed")
+colnames(conf_matrix) <- c("not_stressed", "stressed")
+# Plot the heatmap
+heatmap(conf_matrix,
+       col = colorRampPalette(c("white", "blue"))(20),
+       main = "Confusion Matrix",
+       xlab = "Predicted Values",
+       ylab = "Actual Values")
+```
+
+
+```{r}
+data <-
+  data.frame(
+    actual = c(('Stressed', times = 149), (("Not Stressed', times = 167)),
+    actual = c((('Stressed'), times = 132), (('Not Stressed'), times = 161)))
+conf_matrix <- table(data$Actual, data$Predicted)
+
+```
+
+```{r}
+
+
+# Your confusion matrix data (replace this with your actual data)
+conf_matrix <- data.frame(
+ Actual = c("Category A", "Category B"),
+ Predicted = c("Category A", "Category B"),
+ Value = matrix(c(132, 17, 6, 161), nrow = 2, byrow = TRUE))
+
+
+# Create the heatmap
+ggplot(conf_matrix, aes(x = Actual, y = Predicted, fill = Value)) +
+ geom_raster() +
+ scale_fill_gradient(low = "white", high = "blue") +
+ labs(title = "Heatmap Confusion Matrix",
+      x = "Actual",
+      y = "Predicted")
+
+conf_df <- as.data.frame(as.table(conf_matrix))
+
+ggplot(conf_matrix, aes(x = Actual, y = Predicted, fill = Value)) +
+  geom_raster() +
+  geom_text(aes(label = Value), vjust = 1.5) +
+  scale_fill_gradient((low = "black", high = "orange"), limits = c(0, 160))) + 
+  scale_x_discrete(breaks = c("no stressed", "stressed", "no stressed"), labels = c("", "stressed", "")) +
+  scale_y_discrete(breaks = c("no stressed", "stressed", "no stressed"), labels = c("", "stressed", "")) +
+  labs(x = "Predicted Values", y = "Actual Values", title = "Confusion Matrix Heatmap")
+```
+
+```{r}
+conf_matrix <- data.frame(
+ Actual = c(132, 6),
+ Predicted = c(17,161),
+ Value = c('stressed', 'not stressed'))
+```
+
+
+
+```{r}
+
+# Create the heatmap
+heatmap_plot <- ggplot(conf_matrix, aes(x = x, y = y, fill = value)) +
+ geom_raster() +
+ scale_fill_gradient(low = "white", high = "blue", limits = c(0, 160)) +
+ theme_minimal()
+```
+
+
+
+
+
+```{r}
+ggplot(data, aes(x = predicted, y =  actual, fill = value)) +
+  theme_bw() +
+  geom_raster() +
+  scale_fill_gradient(low = '', high = '')
+```

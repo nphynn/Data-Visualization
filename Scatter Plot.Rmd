@@ -1,0 +1,89 @@
+---
+title: "Scatter Plot"
+author: "Nick Phynn"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(xlsx)
+```
+
+```{r}
+data <- read_xlsx("scatterdata.xlsx")
+str(data)
+```
+
+# Plot 1
+
+```{r}
+p1 <- ggplot(data, aes(x = Age , y = pH), ylim=c(7,9)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black"))+
+  geom_point() +
+  scale_y_continuous(limits = c(7,9), breaks = seq(7, 9, 0.5)) +
+  labs(
+    x = 'Age of field garden (year)',
+    y = 'pH') +
+  geom_hline(aes(yintercept = 8.25), linetype = 3)
+```
+
+# Plot 2
+
+```{r}
+p2 <- ggplot(data, aes(x = Age , y = EC)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  geom_point() +
+  labs(
+    x = 'Age of field garden (year)',
+    y = 'EC(dS m-1)') +
+  geom_hline(aes(yintercept = 150), linetype = 3)
+```
+
+# Plot 3
+
+```{r}
+#Set line at 10 
+#Make background white
+#Add Labels
+p3 <- ggplot(data, aes(x = Age , y = CN)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  geom_point() +
+  scale_y_continuous(limits = c(8,12), breaks = seq(8, 12, 1)) +
+  labs(
+    x = 'Age of field garden (year)',
+    y = 'C/N') +
+  geom_hline(aes(yintercept = 10), linetype = 3)
+```
+
+# Plot 4
+
+```{r}
+p4 <- ggplot(data, aes(x = Age , y = Na)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+panel.background = element_blank(), axis.line = element_line(colour = "black")) +
+  geom_point() +
+  scale_y_continuous(limits = c(0.1,0.6), breaks = seq(0.1, 0.6, 0.1)) +
+  labs(
+    x = 'Age of field garden (year)',
+    y = 'Na (mg g-1)') +
+  geom_hline(aes(yintercept = 0.3), linetype = 3)
+```
+
+```{r}
+library(cowplot)
+```
+
+```{r}
+plot_grid(p1, p2, p3, p4, labels = )
+```
+
+

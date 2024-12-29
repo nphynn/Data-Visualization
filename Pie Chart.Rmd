@@ -1,0 +1,52 @@
+---
+title: "Pie Chart"
+output: html_document
+date: "2024-01-18"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data <-
+  data.frame(
+    Episodes = c("2 Episodes or less", "2-4 Episodes", "More than 4 Episodes"),
+    Percentage = c(56.3, 25, 18.8))
+
+
+p1 <- ggplot(data, aes(x = '', y = Percentage, fill = Episodes)) +
+  geom_bar(stat = 'identity', width = 1, color = "white") +
+  coord_polar(theta = 'y', start = 0) + 
+  theme_void() +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_stack(vjust = .5), color = "white") +
+  scale_fill_manual(values = c("blue", "red", "orange")) +
+  ggtitle("Episodes viewed Before Lockdown") +
+  theme(legend.title = element_blank())
+```
+
+
+```{r}
+data1 <-
+  data.frame(
+    Episodes = c("2 Episodes or less", "2-4 Episodes", "More than 4 Episodes"),
+    Percentage = c(26.3, 21.2, 52.5))
+
+
+p2 <- ggplot(data1, aes(x = '', y = Percentage, fill = Episodes)) +
+  geom_bar(stat = 'identity', width = 1, color = "white") +
+  coord_polar(theta = 'y', start = 0) + 
+  theme_void() +
+  geom_text(aes(label = paste0(Percentage, "%")), position = position_stack(vjust = .5), color = "white") +
+  scale_fill_manual(values = c("blue", "red", "orange")) +
+  ggtitle("Episodes viewed During Lockdown") +
+  theme(legend.title = element_blank())
+```
+
+
+```{r}
+plot_grid(p1, p2, labels = )
+```
+
